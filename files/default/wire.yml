@@ -1,0 +1,14 @@
+---
+test: &default
+  host: 184.106.1.219
+  user: 1kb-staging
+  pass: 8fCLPJNJtaockTd7
+  vhost: 1kb_staging
+  ssl: true
+  topic: staging_data
+
+development:
+  <<: *default
+
+production:
+  <<: *default

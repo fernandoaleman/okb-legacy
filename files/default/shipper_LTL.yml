@@ -1,0 +1,13 @@
+development:
+  api: http://irl-servicelighting.t-insight.com/InsightRaterLINK/serviceLTL.asmx?WSDL
+  userid: slight216
+  pswd: sl5881
+  pallet_weight: 30
+  LTL_avail_to: sales_rep
+
+production:
+  api: http://irl-servicelighting.t-insight.com/InsightRaterLINK/serviceLTL.asmx?WSDL
+  userid: slight216
+  pswd: sl5881
+  pallet_weight: 30
+  LTL_avail_to: sales_rep

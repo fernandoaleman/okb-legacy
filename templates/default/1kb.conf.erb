@@ -1,0 +1,79 @@
+<VirtualHost *:80>
+  ServerName <%= @server_name %>
+
+  <% unless @server_aliases.empty? %>
+  ServerAlias <%= @server_aliases.join(' ') %>
+  <% end %>
+
+  DocumentRoot <%= @document_root %>
+
+  RewriteEngine On
+  RewriteRule ^/?(.*) https://%{SERVER_NAME}/$1 [R=301,L]
+</VirtualHost>
+
+<VirtualHost *:443>
+  ServerName  <%= @server_name %>
+  ServerAlias <%= @server_aliases.join(' ') %>
+  DocumentRoot <%= @document_root %>
+
+  RewriteEngine On
+
+  <Directory <%= @document_root %>>
+    Options FollowSymLinks
+    AllowOverride All
+    Require all granted
+  </Directory>
+
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride All
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  LogLevel notice
+  ErrorLog /var/log/apache2/<%= @server_name %>-error.log
+  CustomLog /var/log/apache2/<%= @server_name %>-access.log combined
+
+  ProxyPass /fil <%= @strangler_url %>
+  ProxyPass /suggestions/ <%= @suggestions_url %>
+
+  ProxyPass /pdf/ <%= @static_url %>/pdf/
+  ProxyPass /images/products/ <%= @static_url %>/images/products/
+  ProxyPass /images/categories/ <%= @static_url %>/images/categories/
+  ProxyPass /images/category_headers/ <%= @static_url %>/images/category_headers/
+  ProxyPass /images/ads/ <%= @static_url %>/images/ads/
+  ProxyPass /images/manu/ <%= @static_url %>/images/manu/
+  ProxyPass /images/images-nwm/ <%= @static_url %>/images/images-nwm/
+  ProxyPass /images/av/ <%= @static_url %>/images/av/
+  ProxyPass /shopping_feed/ <%= @static_url %>/shopping_feed/
+  ProxyPass /mktg/ <%= @static_url %>/mktg/
+  ProxyPass /product_image/ <%= @static_url %>/product_image/
+  ProxyPass /sitemap.xml <%= @static_url %>/sitemap.xml
+
+  RewriteEngine On
+  # RewriteLog /var/log/apache2/<%= @server_name %>-rewrite.log
+  # RewriteLogLevel 0
+
+  # Canonical host, www.1000bulbs.com
+  RewriteCond %{HTTP_HOST}   !^<%= @server_name %> [NC]
+  RewriteCond %{HTTP_HOST}   !^$
+  RewriteRule ^/(.*)$        https://<%= @server_name %>/$1 [L,R=301]
+
+  RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+  RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+  RewriteRule ^.*$ /system/maintenance.html [L]
+
+  SSLEngine On
+  SSLProxyEngine On
+  SSLProtocol all
+  SSLCertificateFile /var/ssl/1kb_wildcard.crt
+  SSLCertificateKeyFile /var/ssl/1kb_wildcard.key
+  SSLCACertificateFile /var/ssl/1kb_wildcard.ca
+</VirtualHost>

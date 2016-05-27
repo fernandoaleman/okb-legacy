@@ -1,0 +1,12 @@
+---
+test:
+  url: https://carbonite-dev.1000bulbs.com
+  key: 1636d664af391ec89a45273630e28627eecd76dd24711a98
+
+development:
+  url: https://carbonite-dev.1000bulbs.com
+  key: 1636d664af391ec89a45273630e28627eecd76dd24711a98
+
+production:
+  url: https://carbonite.1000bulbs.com
+  key:

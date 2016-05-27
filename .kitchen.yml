@@ -1,0 +1,22 @@
+---
+driver:
+  name: vagrant
+  synced_folders:
+    - [ "../", "/vagrant" ]
+  customize:
+    memory: 2048
+    cpus: 2
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: php
+    run_list:
+      - recipe[okb-legacy::install-php]
+  - name: vagrant-workstation
+    run_list:
+      - recipe[okb-legacy::vagrant-workstation]
